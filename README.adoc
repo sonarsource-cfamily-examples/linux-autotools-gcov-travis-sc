@@ -20,6 +20,8 @@ It is very easy to analyze a C/C++/Objective-C project with SonarCloud https://d
 .. Wrap your compilation with the https://sonarcloud.io/documentation/analysis/languages/cfamily/#analysis-steps-using-build-wrapper[Build Wrapper]
 .. Run `sonar-scanner` later on
 
+Note: `SONAR_TOKEN` may be also configured as enviroment variable in Repository Settings of Travis CI.
+
 You can take a look at the link:sonar-project.properties[sonar-project.properties] and link:.travis.yml[.travis.yml] to see it in practice.
 
 = Documentation
