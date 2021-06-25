@@ -2,8 +2,8 @@
 // URIs:
 :uri-qg-status: https://sonarcloud.io/dashboard?id=sonarsource-cfamily-examples_linux-autotools-travis-sc
 :img-qg-status: https://sonarcloud.io/api/project_badges/measure?project=sonarsource-cfamily-examples_linux-autotools-travis-sc&metric=alert_status
-:uri-build-status: https://travis-ci.com/sc-sq-c-family-examples/linux-autotools-travis-sc
-:img-build-status: https://travis-ci.com/sc-sq-c-family-examples/linux-autotools-travis-sc.svg?branch=main
+:uri-build-status: https://travis-ci.com/sonarsource-cfamily-examples/linux-autotools-travis-sc
+:img-build-status: https://travis-ci.com/sonarsource-cfamily-examples/linux-autotools-travis-sc.svg?branch=main
 
 image:{img-build-status}[Build Status, link={uri-build-status}]
 image:{img-qg-status}[Quality Gate Status,link={uri-qg-status}]

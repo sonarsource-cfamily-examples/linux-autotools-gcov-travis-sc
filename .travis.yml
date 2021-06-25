@@ -8,7 +8,7 @@ compiler: gcc
 
 addons:
   sonarcloud:
-    organization: "sc-sq-c-family-examples"
+    organization: "sonarsource-cfamily-examples"
     token:
       secure: "Cjz5MHr7Lzay8EKR9paLMKvHsbmDYpZCqPBuCp7+srnQ/Ai0rj8UCm+qrWKshN8l93kHJwgV1P9fEQjC0Huzn9WT8SNpwMnGd+uxeJ62VOQldN3I4FZYYH405Fq/t16Wr6iSzucFdyRmPnLgaKzCvloDYOqHIl/sY5dFk2XMYKaHMDGPzELHmVCWRrxus254RxX58yLWCZ6Ys2V5cu3amTTFEsZDZ+/Evp40Ap0SpUWNuyCvto4B6lvyA6pZHqdY71dMD2cio54I0c366RqhPEtK9k6ZJ1bV184YEmyc+Q+m8egvQxzeSKCLwaXBi3UiywVacSDjx7MpuXzxn4pwdTI1aYl9zbLFX3++wmbGU/VmAwRnH4/QiZfQr2RfCj2LCQSjRziMPcak6v18Z/Xhw0G97+HoSvmU3oBHChfCe9OupCecAY25S+5rKvYjAWZdXPV+6AVMOljxZ3Tzpz7RC/nQDS7UNCckA+mYg6R5C37UTN9K+pVIfe8hlHs/A4Jny0eycmsOG/pAmRWnvI19oHG8ILKCd6oFcE1/AjZFt8S/Z1pxkH8S7HjV3UoiQZOumzTyJZDEdFGMP7j6YAnYf6oGY8ENcNZCsBxyGiGX+i8UBt8OD+ItC3Lue89i5JSvBXXpnF9U41GtD9E0CX/NG0qQyw2uQds+CaSZU2vNEao="
   apt:
