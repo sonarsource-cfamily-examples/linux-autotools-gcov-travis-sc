@@ -1,14 +1,14 @@
 = C++ example project scanned on SonarCloud using Travis CI
 // URIs:
-:uri-qg-status: https://sonarcloud.io/dashboard?id=sonarsource-cfamily-examples_linux-autotools-travis-sc
-:img-qg-status: https://sonarcloud.io/api/project_badges/measure?project=sonarsource-cfamily-examples_linux-autotools-travis-sc&metric=alert_status
-:uri-build-status: https://travis-ci.com/sonarsource-cfamily-examples/linux-autotools-travis-sc
-:img-build-status: https://travis-ci.com/sonarsource-cfamily-examples/linux-autotools-travis-sc.svg?branch=main
+:uri-qg-status: https://sonarcloud.io/dashboard?id=sonarsource-cfamily-examples_linux-autotools-gcov-travis-sc
+:img-qg-status: https://sonarcloud.io/api/project_badges/measure?project=sonarsource-cfamily-examples_linux-autotools-gcov-travis-sc&metric=alert_status
+:uri-build-status: https://app.travis-ci.com/sonarsource-cfamily-examples/linux-autotools-gcov-travis-sc
+:img-build-status: https://app.travis-ci.com/sonarsource-cfamily-examples/linux-autotools-gcov-travis-sc.svg?branch=main
 
 image:{img-build-status}[Build Status, link={uri-build-status}]
 image:{img-qg-status}[Quality Gate Status,link={uri-qg-status}]
 
-*This project is analysed on https://sonarcloud.io/dashboard?id=sonarsource-cfamily-examples_linux-autotools-travis-sc[SonarCloud]!*
+*This project is analysed on https://sonarcloud.io/dashboard?id=sonarsource-cfamily-examples_linux-autotools-gcov-travis-sc[SonarCloud]!*
 
 :note-caption: :information_source:
 NOTE: This simple example ignores https://docs.sonarcloud.io/advanced-setup/languages/c-c-objective-c/#analysis-cache[analysis cache] and https://docs.sonarcloud.io/advanced-setup/languages/c-c-objective-c/#parallel-code-scan[multithreaded execution] both of which can boost analysis significantly.
@@ -26,6 +26,15 @@ It is very easy to analyze a C, C++ and Objective-C project with SonarCloud http
 Note: `SONAR_TOKEN` may be also configured as enviroment variable in Repository Settings of Travis CI.
 
 You can take a look at the link:sonar-project.properties[sonar-project.properties] and link:.travis.yml[.travis.yml] to see it in practice.
+
+== This project uses gcov to collect test coverage
+For SonarCloud to pick-up the coverage information produced from compiling with the `--coverage` flag and running the tests,
+you need to run gcov for each object file
+and point `sonar.cfamily.gcov.reportsPath` property to the folder containing the produced `.gcov` files.
+
+:warning-caption: :warning:
+WARNING: Beware that if you are running multiple executables and want to collect coverage from all of them, you have to be careful of keeping one `.gcda` file per source file and avoid overwriting `.gcov` files (especially if you are building out-of-source, for example, with CMake). See also `-fprofile-abs-path` gcc option and `--preserve-paths` gcov option.
+
 
 = Documentation
 

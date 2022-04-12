@@ -1,5 +1,5 @@
 language: cpp
-dist: bionic
+dist: focal
 os: linux
 
 sudo: false
@@ -10,10 +10,8 @@ addons:
   sonarcloud:
     organization: "sonarsource-cfamily-examples"
     token:
-      secure: "Cjz5MHr7Lzay8EKR9paLMKvHsbmDYpZCqPBuCp7+srnQ/Ai0rj8UCm+qrWKshN8l93kHJwgV1P9fEQjC0Huzn9WT8SNpwMnGd+uxeJ62VOQldN3I4FZYYH405Fq/t16Wr6iSzucFdyRmPnLgaKzCvloDYOqHIl/sY5dFk2XMYKaHMDGPzELHmVCWRrxus254RxX58yLWCZ6Ys2V5cu3amTTFEsZDZ+/Evp40Ap0SpUWNuyCvto4B6lvyA6pZHqdY71dMD2cio54I0c366RqhPEtK9k6ZJ1bV184YEmyc+Q+m8egvQxzeSKCLwaXBi3UiywVacSDjx7MpuXzxn4pwdTI1aYl9zbLFX3++wmbGU/VmAwRnH4/QiZfQr2RfCj2LCQSjRziMPcak6v18Z/Xhw0G97+HoSvmU3oBHChfCe9OupCecAY25S+5rKvYjAWZdXPV+6AVMOljxZ3Tzpz7RC/nQDS7UNCckA+mYg6R5C37UTN9K+pVIfe8hlHs/A4Jny0eycmsOG/pAmRWnvI19oHG8ILKCd6oFcE1/AjZFt8S/Z1pxkH8S7HjV3UoiQZOumzTyJZDEdFGMP7j6YAnYf6oGY8ENcNZCsBxyGiGX+i8UBt8OD+ItC3Lue89i5JSvBXXpnF9U41GtD9E0CX/NG0qQyw2uQds+CaSZU2vNEao="
+      secure: "TrXrS03COBMvMRGdGBhwjimv+OKHicNKFPrmu5olN40cwYbJMmhctTnSLDtRWppx3zfFORqOHjtyffU5v4KnJYpZik6A3zsIbsWAHBumOOTP7OzDJXKw/2LGOesA2aOwmKi+mni7xZjgvxFVPWngetL+sluaa1cc28C3LHsTYmCaf/iqHbu19ur/LYkM9eMiJLtquayXNdpfXG/8jZYWrjCOWY+UTzmHI4JGlRJCXt5UPkIAgMZEIv+wchk6wlQjo1PO54OSMlFwP7Vc1wbg4QfUF5jOTZBBgCfofIe9zmHg5JJ9a3GmeegxcjwiyLFnLaSVTQZpPgD7hSGF3h1ll4ucur8dAn+ztl2FR97JdIQNdqtw5Dg9WH2ELeWq25GWMd9nZyxxxpza37aksAIH25JwJK5dWfm0MBhEKvKagaWlg2WUILtmLCTQyy2N20mZjavhTlYOtMGj8+lAsno60qRv7JKWYhcOJysWUbgcWSEcOuBBfGLa/q4Dln3YQ/2st8PUkSGWGOntsI9o9DAdCXQaUHne1z9YbkZJ/jn3pG5NgUgmWEk5KrxXjUOaoLY5NT0ytfngVkBccmiI716EXfA0Qh5u26ELdfGaMXJIc8U4BhrxJB8kauZz3TvOo6eplqNTyFYb6HQVRRcdYbNAtkZB2zFeF2GLeAMjHSi7WGg="
   apt:
-    sources:
-      - ubuntu-toolchain-r-test
     packages:
       - g++-9
 
@@ -28,9 +26,24 @@ script:
   # Wraps the compilation with the Build Wrapper to generate configuration (used
   # later by the SonarQube Scanner) into the "build_wrapper_output_folder" folder
   - build-wrapper-linux-x86-64 --out-dir "$BUILD_WRAPPER_OUT_DIR" make clean all
+  # Execute the tests to generate the coverage statistics
+  - ./src/test1/coverage_test1
+  - ./src/test2/coverage_test2
+  # Run gcov to translate `.gcda` files into `.gcov` readable by humans and SonarCloud
+  - mkdir coverage-dir
+  - cd coverage-dir
+  # --preserve-paths helps us avoid name clash for `.gcov` files corresponding to source files
+  # with the same name but in different directories.
+  - find .. -name '*.o' | xargs gcov --preserve-paths
+  - cd ..
   # And finally run the SonarQube analysis - read the "sonar-project.properties"
   # file to see the specific configuration
-  - sonar-scanner --define sonar.cfamily.cache.enabled=true --define sonar.cfamily.cache.path=${TRAVIS_HOME}/.cfamily --define sonar.cfamily.threads=${NUMBER_OF_PROCESSORS} --define sonar.cfamily.build-wrapper-output="$BUILD_WRAPPER_OUT_DIR"
+  - >
+    sonar-scanner --define sonar.cfamily.cache.enabled=true \
+                  --define sonar.cfamily.cache.path=${TRAVIS_HOME}/.cfamily \
+                  --define sonar.cfamily.threads=${NUMBER_OF_PROCESSORS} \
+                  --define sonar.cfamily.build-wrapper-output="$BUILD_WRAPPER_OUT_DIR" \
+                  --define sonar.cfamily.gcov.reportsPath="coverage-dir"
 
 cache:
   directories:
