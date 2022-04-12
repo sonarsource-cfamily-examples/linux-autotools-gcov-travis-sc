@@ -1,0 +1,40 @@
+language: cpp
+dist: bionic
+os: linux
+
+sudo: false
+
+compiler: gcc
+
+addons:
+  sonarcloud:
+    organization: "sonarsource-cfamily-examples"
+    token:
+      secure: "Cjz5MHr7Lzay8EKR9paLMKvHsbmDYpZCqPBuCp7+srnQ/Ai0rj8UCm+qrWKshN8l93kHJwgV1P9fEQjC0Huzn9WT8SNpwMnGd+uxeJ62VOQldN3I4FZYYH405Fq/t16Wr6iSzucFdyRmPnLgaKzCvloDYOqHIl/sY5dFk2XMYKaHMDGPzELHmVCWRrxus254RxX58yLWCZ6Ys2V5cu3amTTFEsZDZ+/Evp40Ap0SpUWNuyCvto4B6lvyA6pZHqdY71dMD2cio54I0c366RqhPEtK9k6ZJ1bV184YEmyc+Q+m8egvQxzeSKCLwaXBi3UiywVacSDjx7MpuXzxn4pwdTI1aYl9zbLFX3++wmbGU/VmAwRnH4/QiZfQr2RfCj2LCQSjRziMPcak6v18Z/Xhw0G97+HoSvmU3oBHChfCe9OupCecAY25S+5rKvYjAWZdXPV+6AVMOljxZ3Tzpz7RC/nQDS7UNCckA+mYg6R5C37UTN9K+pVIfe8hlHs/A4Jny0eycmsOG/pAmRWnvI19oHG8ILKCd6oFcE1/AjZFt8S/Z1pxkH8S7HjV3UoiQZOumzTyJZDEdFGMP7j6YAnYf6oGY8ENcNZCsBxyGiGX+i8UBt8OD+ItC3Lue89i5JSvBXXpnF9U41GtD9E0CX/NG0qQyw2uQds+CaSZU2vNEao="
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-9
+
+env:
+  - CXX=g++-9 BUILD_WRAPPER_OUT_DIR=build_wrapper_output_folder
+
+script:
+  # Prepare the build system
+  - autoreconf --install
+  - ./configure
+  - NUMBER_OF_PROCESSORS=$(nproc --all)
+  # Wraps the compilation with the Build Wrapper to generate configuration (used
+  # later by the SonarQube Scanner) into the "build_wrapper_output_folder" folder
+  - build-wrapper-linux-x86-64 --out-dir "$BUILD_WRAPPER_OUT_DIR" make clean all
+  # And finally run the SonarQube analysis - read the "sonar-project.properties"
+  # file to see the specific configuration
+  - sonar-scanner --define sonar.cfamily.cache.enabled=true --define sonar.cfamily.cache.path=${TRAVIS_HOME}/.cfamily --define sonar.cfamily.threads=${NUMBER_OF_PROCESSORS} --define sonar.cfamily.build-wrapper-output="$BUILD_WRAPPER_OUT_DIR"
+
+cache:
+  directories:
+    - $HOME/.sonar/cache
+    # This contains the CFamily cache. According to https://docs.travis-ci.com/user/caching/#pull-request-builds-and-caches,
+    # for a PR, it will use the cache of the target branch if the branch of the PR does not already have its cache.
+    - $HOME/.cfamily
