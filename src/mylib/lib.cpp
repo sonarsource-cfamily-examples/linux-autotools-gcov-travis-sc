@@ -3,9 +3,9 @@ int myfun(bool b, int (*callback)(int)) {
   int num = -1;
 
   if (b) {
-    num = callback(num);
+    num = callback(callback(num));
   } else {
-    return callback(callback(num));
+    return num;
   }
   if (callback != 0) {
     ;
