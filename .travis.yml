@@ -1,0 +1,53 @@
+language: cpp
+dist: focal
+os: linux
+
+sudo: false
+
+compiler: gcc
+
+addons:
+  sonarcloud:
+    organization: "sonarsource-cfamily-examples"
+    token:
+      secure: "TrXrS03COBMvMRGdGBhwjimv+OKHicNKFPrmu5olN40cwYbJMmhctTnSLDtRWppx3zfFORqOHjtyffU5v4KnJYpZik6A3zsIbsWAHBumOOTP7OzDJXKw/2LGOesA2aOwmKi+mni7xZjgvxFVPWngetL+sluaa1cc28C3LHsTYmCaf/iqHbu19ur/LYkM9eMiJLtquayXNdpfXG/8jZYWrjCOWY+UTzmHI4JGlRJCXt5UPkIAgMZEIv+wchk6wlQjo1PO54OSMlFwP7Vc1wbg4QfUF5jOTZBBgCfofIe9zmHg5JJ9a3GmeegxcjwiyLFnLaSVTQZpPgD7hSGF3h1ll4ucur8dAn+ztl2FR97JdIQNdqtw5Dg9WH2ELeWq25GWMd9nZyxxxpza37aksAIH25JwJK5dWfm0MBhEKvKagaWlg2WUILtmLCTQyy2N20mZjavhTlYOtMGj8+lAsno60qRv7JKWYhcOJysWUbgcWSEcOuBBfGLa/q4Dln3YQ/2st8PUkSGWGOntsI9o9DAdCXQaUHne1z9YbkZJ/jn3pG5NgUgmWEk5KrxXjUOaoLY5NT0ytfngVkBccmiI716EXfA0Qh5u26ELdfGaMXJIc8U4BhrxJB8kauZz3TvOo6eplqNTyFYb6HQVRRcdYbNAtkZB2zFeF2GLeAMjHSi7WGg="
+  apt:
+    packages:
+      - g++-9
+
+env:
+  - CXX=g++-9 BUILD_WRAPPER_OUT_DIR=build_wrapper_output_folder
+
+script:
+  # Prepare the build system
+  - autoreconf --install
+  - ./configure
+  - NUMBER_OF_PROCESSORS=$(nproc --all)
+  # Wraps the compilation with the Build Wrapper to generate configuration (used
+  # later by the SonarQube Scanner) into the "build_wrapper_output_folder" folder
+  - build-wrapper-linux-x86-64 --out-dir "$BUILD_WRAPPER_OUT_DIR" make clean all
+  # Execute the tests to generate the coverage statistics
+  - ./src/test1/coverage_test1
+  - ./src/test2/coverage_test2
+  # Run gcov to translate `.gcda` files into `.gcov` readable by humans and SonarCloud
+  - mkdir coverage-dir
+  - cd coverage-dir
+  # --preserve-paths helps us avoid name clash for `.gcov` files corresponding to source files
+  # with the same name but in different directories.
+  - find .. -name '*.o' | xargs gcov --preserve-paths
+  - cd ..
+  # And finally run the SonarQube analysis - read the "sonar-project.properties"
+  # file to see the specific configuration
+  - >
+    sonar-scanner --define sonar.cfamily.cache.enabled=true \
+                  --define sonar.cfamily.cache.path=${TRAVIS_HOME}/.cfamily \
+                  --define sonar.cfamily.threads=${NUMBER_OF_PROCESSORS} \
+                  --define sonar.cfamily.build-wrapper-output="$BUILD_WRAPPER_OUT_DIR" \
+                  --define sonar.cfamily.gcov.reportsPath="coverage-dir"
+
+cache:
+  directories:
+    - $HOME/.sonar/cache
+    # This contains the CFamily cache. According to https://docs.travis-ci.com/user/caching/#pull-request-builds-and-caches,
+    # for a PR, it will use the cache of the target branch if the branch of the PR does not already have its cache.
+    - $HOME/.cfamily

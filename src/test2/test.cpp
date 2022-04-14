@@ -1,0 +1,9 @@
+#include "mylib/lib.h"
+
+int ff(int x) {
+  return 2 / x;
+}
+
+int main() {
+  return myfun(false, ff) != 0;
+}
