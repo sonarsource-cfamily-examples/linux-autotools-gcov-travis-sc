@@ -19,7 +19,7 @@ To get coverage and feed it to the sonar-scanner, use the following procedure.
 . Add the `--coverage` and `-fprofile-abs-path` compilation flags to instrument the binaries
 . Run the tests to generate the test coverage information
 . Run `gcov --preserve-paths` from a dedicated directory for each object file
-. Point the `sonar.coverageReportPath` property at that dedicated directory with coverage reports
+. Point the `sonar.cfamily.gcov.reportsPath` property at that dedicated directory with coverage reports
 . Run `sonar-scanner` as the final step
 
 You can take a look at the link:sonar-project.properties[sonar-project.properties] and link:.travis.yml[.travis.yml] to see it in practice.
