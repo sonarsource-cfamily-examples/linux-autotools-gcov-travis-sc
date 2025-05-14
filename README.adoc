@@ -8,7 +8,7 @@
 image:{img-build-status}[Build Status, link={uri-build-status}]
 image:{img-qg-status}[Quality Gate Status,link={uri-qg-status}]
 
-*The test coverage shown here works on both SonarQube and SonarCloud. This project is analysed on https://sonarcloud.io/dashboard?id=sonarsource-cfamily-examples_linux-autotools-gcov-travis-sc[SonarCloud]!*
+*The test coverage shown here works on both SonarQube Server and Cloud. This project is analysed on https://sonarcloud.io/dashboard?id=sonarsource-cfamily-examples_linux-autotools-gcov-travis-sc[SonarQube Cloud]!*
 
 :note-caption: :information_source:
 NOTE: This simple example aims at demonstrating code coverage in action. It explains how to add coverage on a project for which the analysis is already configured. Analysis configuration examples are available <<code-description,here>>. +
@@ -25,7 +25,7 @@ To get coverage and feed it to the sonar-scanner, use the following procedure.
 You can take a look at the link:sonar-project.properties[sonar-project.properties] and link:.travis.yml[.travis.yml] to see it in practice.
 
 == This project uses gcov to collect test coverage
-For SonarCloud to pick-up the coverage information produced from compiling with the `--coverage` flag and running the tests,
+For SonarQube Cloud to pick-up the coverage information produced from compiling with the `--coverage` flag and running the tests,
 you need to run gcov for each object file
 and point `sonar.cfamily.gcov.reportsPath` property to the folder containing the produced `.gcov` files.
 
@@ -35,18 +35,18 @@ WARNING: Beware that if you are running multiple executables and want to collect
 
 = Documentation
 
-- https://docs.sonarcloud.io/advanced-setup/languages/c-c-objective-c/[Documentation overview of the C, C++ and Objective-C analyzer]
+- https://docs.sonarsource.com/sonarqube-cloud/advanced-setup/languages/c-family/overview/[C/C++/Objective-C analysis overview]
 - https://docs.travis-ci.com/user/sonarcloud/[Documentation of the SonarCloud Travis Add-on]
-- https://docs.sonarcloud.io/getting-started/github/[Documentation of using SonarCloud with GitHub]
-- https://docs.sonarcloud.io/advanced-setup/languages/c-family/prerequisites/#generating-a-compilation-database[Generating a compilation database (compile_commands.json)]
-- https://docs.sonarsource.com/sonarcloud/advanced-setup/languages/c-family/running-the-analysis/[Running the analysis in Compilation Database mode]
+- https://docs.sonarsource.com/sonarqube-cloud/getting-started/github/[Getting started with GitHub]
+- https://docs.sonarsource.com/sonarqube-cloud/advanced-setup/languages/c-family/prerequisites/#generating-a-compilation-database[Generating a compilation database]
+- https://docs.sonarsource.com/sonarqube-cloud/advanced-setup/languages/c-family/running-the-analysis/[Running the CFamily analysis]
 
 = Code Description
 
 An example of a flawed C++ code. The https://github.com/sonarsource-cfamily-examples/code[code repository] can be https://github.com/sonarsource-cfamily-examples/automatic-analysis-sc[analyzed automatically], but it can also be compiled with different build systems using different CI pipelines on Linux, macOS, and Windows.
 
 The https://github.com/sonarsource-cfamily-examples/code[code repository] is forked into other repositories in https://github.com/sonarsource-cfamily-examples[this collection] to add a specific build system, platform, and CI.
-The downstream repositories are analyzed either with https://www.sonarqube.org/[SonarQube] or https://sonarcloud.io/[SonarCloud].
+The downstream repositories are analyzed either with https://www.sonarqube.org/[SonarQube Server] or https://sonarcloud.io/[SonarQube Cloud].
 
 You can find examples for:
 
@@ -73,8 +73,8 @@ Running on the following CI services:
 
 Configured for analysis on:
 
-* https://github.com/sonarsource-cfamily-examples?q=-sq[SonarQube]
-* https://github.com/sonarsource-cfamily-examples?q=-sc[SonarCloud]
+* https://github.com/sonarsource-cfamily-examples?q=-sq[SonarQube Server]
+* https://github.com/sonarsource-cfamily-examples?q=-sc[SonarQube Cloud]
 
 You can find also a few examples demonstrating:
 

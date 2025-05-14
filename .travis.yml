@@ -1,8 +1,6 @@
 language: cpp
-dist: focal
+dist: jammy
 os: linux
-
-sudo: false
 
 compiler: gcc
 
@@ -14,15 +12,16 @@ addons:
   apt:
     packages:
       - g++-9
+      - cmake
+      - openjdk-17-jre
 
 env:
-  - CXX=g++-9 BUILD_WRAPPER_OUT_DIR=build_wrapper_output_folder
+  - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 PATH=$JAVA_HOME/bin:$PATH CXX=g++-9 BUILD_WRAPPER_OUT_DIR=build_wrapper_output_folder
 
 script:
   # Prepare the build system
   - autoreconf --install
   - ./configure
-  - NUMBER_OF_PROCESSORS=$(nproc --all)
   # Wraps the compilation with the Build Wrapper to generate configuration (used
   # later by the SonarQube Scanner) into the "build_wrapper_output_folder" folder
   - build-wrapper-linux-x86-64 --out-dir "$BUILD_WRAPPER_OUT_DIR" make clean all
@@ -38,9 +37,7 @@ script:
   - cd ..
   # And finally run the SonarQube analysis - read the "sonar-project.properties"
   # file to see the specific configuration
-  - >
-    sonar-scanner --define sonar.cfamily.compile-commands="$BUILD_WRAPPER_OUT_DIR/compile_commands.json" \
-                  --define sonar.cfamily.gcov.reportsPath="coverage-dir"
+  - sonar-scanner --define sonar.cfamily.gcov.reportsPath="coverage-dir"
 
 cache:
   directories:
