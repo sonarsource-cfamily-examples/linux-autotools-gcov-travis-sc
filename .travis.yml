@@ -8,7 +8,7 @@ addons:
   sonarcloud:
     organization: "sonarsource-cfamily-examples"
     token:
-      secure: "quVmLFH7TM9w0hbfffLDiORCz6JG97sJnFFj3pf42UhsWVM7YNpe5i+NzZpmdrcp1M2DdwKHLKMlHm91hLyougMnLDDEMpNGkGcJ7o0ZGRIDwnQzHP/Ax8qm2q3iGgvQONGo0/KDPeMNPhPbladO35TcUCgxV59xg7JtPKHotr7HqK/U9U7BiIWUVdlcfMs5QVxrz4NU4zafNULDSZxXXrlcU/8UIkNIsltU6uTB6+wncsAFd/UnnQYpa6pN1tHkc+IXSlcyJroKo75qH+ErPDMsByzK+4ql0jZZQaFASNXRNDYGvA2bVXv14/TRGxL0p+7Hb4b8MmGmuRKaAo+FzQJzA8i9tm6U+9N/1CSpwjq0Z9/R0dsGn+96dvN1he4I/8Kgo/mbUc0VmpVu9d2fSgkYRMnLJYn5f5vbgUY7bey2ePfmgTLbkiTg39DO1Q0lCjGPmg6BnJCd7N0feDc0W7iEoihZ9XsMSf0C13YQTnM3Dn9aHGHpftFiWoHPFuAycKMpgd3Ei5FIOavOl5nLQVC152U53PMcT3KuTwqTK/5yTgeKmaqKy4C9WBf0g6Av9a7alEavITz1Q6k9uKzECtRftkCJ752+svOUyArWL5dCskCw8pbQ0C72ZL9oXCIbdHEZaf/jG1AtcBmBpSjOlCfgV4j6+gfbkgFGaF+cvjE="
+      secure: "N/V1BiXZVk1JuexlnsnDSesbhLxYIuh2z/1YKmrOTjGnZ5Ez6BeNkMnFZPrQ3DB+crEQVH4h6375AoFU54ofN2rn2Z7SNj9Hi3f2pHE15VCBYNyXvEfiU8QxxqBGnOwwJG1W/hnBT2TIZ4uIjIsnTSaMcx6gXbYYEDqsYjAaprrecCf8DObVKqLcaOZJMxPs817GIGh0nIhS7kc2oase6ZJD8gYI4z11kRSNuTtICuBq2LDabSfShfoWrvjcc4VJxsPb4EmU2CnCsruW1q0OIUXt3AzORKLvGDhyYVOyyj9JHETz6ym9we6paA/sqKuRV8YrH+5ntMkr/FIDC99tL2iQ5jfNPDbseMGYiuZpwweoK4ppd3YD7iQLIVE8VWcx1CBRnRAdFAyK0N4iOdXx4jnrmpbuHGqBIFswja6XqgcoIPUxwp8MGeAOyV62wiTOT3bJ4qSIMcXFn2pPT1Qn0Bvc8iBPFoAtoxnc3TYXk8zY6pQzGfjncUSnC0x2q36Uu+4Wideg8bU8JMtRbsH8fy+qXoQN+N21lW8cwJqjq9shEtn9d4laESXEufFKk9eRi4V/OBhUdWRZucv8sMlb5t8fIQBq07b/VvDYnaTrS63RSp2Ao6y3uhtlZZj+YuTlhYOiGcZZ7io1rO/Te8ISzrPnlmQqSpSHuXLunj1GmUU="
   apt:
     packages:
       - g++-9
@@ -16,14 +16,14 @@ addons:
       - openjdk-17-jre
 
 env:
-  - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 PATH=$JAVA_HOME/bin:$PATH CXX=g++-9 BUILD_WRAPPER_OUT_DIR=build_wrapper_output_folder
+  - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 PATH=$JAVA_HOME/bin:$PATH CXX=g++-9 BUILD_WRAPPER_OUT_DIR=build_wrapper_output_directory
 
 script:
   # Prepare the build system
   - autoreconf --install
   - ./configure
   # Wraps the compilation with the Build Wrapper to generate configuration (used
-  # later by the SonarQube Scanner) into the "build_wrapper_output_folder" folder
+  # later by the SonarQube Scanner) into the "build_wrapper_output_directory" folder
   - build-wrapper-linux-x86-64 --out-dir "$BUILD_WRAPPER_OUT_DIR" make clean all
   # Execute the tests to generate the coverage statistics
   - ./src/test1/coverage_test1
