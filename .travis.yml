@@ -1,8 +1,6 @@
 language: cpp
-dist: focal
+dist: jammy
 os: linux
-
-sudo: false
 
 compiler: gcc
 
@@ -10,21 +8,22 @@ addons:
   sonarcloud:
     organization: "sonarsource-cfamily-examples"
     token:
-      secure: "TrXrS03COBMvMRGdGBhwjimv+OKHicNKFPrmu5olN40cwYbJMmhctTnSLDtRWppx3zfFORqOHjtyffU5v4KnJYpZik6A3zsIbsWAHBumOOTP7OzDJXKw/2LGOesA2aOwmKi+mni7xZjgvxFVPWngetL+sluaa1cc28C3LHsTYmCaf/iqHbu19ur/LYkM9eMiJLtquayXNdpfXG/8jZYWrjCOWY+UTzmHI4JGlRJCXt5UPkIAgMZEIv+wchk6wlQjo1PO54OSMlFwP7Vc1wbg4QfUF5jOTZBBgCfofIe9zmHg5JJ9a3GmeegxcjwiyLFnLaSVTQZpPgD7hSGF3h1ll4ucur8dAn+ztl2FR97JdIQNdqtw5Dg9WH2ELeWq25GWMd9nZyxxxpza37aksAIH25JwJK5dWfm0MBhEKvKagaWlg2WUILtmLCTQyy2N20mZjavhTlYOtMGj8+lAsno60qRv7JKWYhcOJysWUbgcWSEcOuBBfGLa/q4Dln3YQ/2st8PUkSGWGOntsI9o9DAdCXQaUHne1z9YbkZJ/jn3pG5NgUgmWEk5KrxXjUOaoLY5NT0ytfngVkBccmiI716EXfA0Qh5u26ELdfGaMXJIc8U4BhrxJB8kauZz3TvOo6eplqNTyFYb6HQVRRcdYbNAtkZB2zFeF2GLeAMjHSi7WGg="
+      secure: "N/V1BiXZVk1JuexlnsnDSesbhLxYIuh2z/1YKmrOTjGnZ5Ez6BeNkMnFZPrQ3DB+crEQVH4h6375AoFU54ofN2rn2Z7SNj9Hi3f2pHE15VCBYNyXvEfiU8QxxqBGnOwwJG1W/hnBT2TIZ4uIjIsnTSaMcx6gXbYYEDqsYjAaprrecCf8DObVKqLcaOZJMxPs817GIGh0nIhS7kc2oase6ZJD8gYI4z11kRSNuTtICuBq2LDabSfShfoWrvjcc4VJxsPb4EmU2CnCsruW1q0OIUXt3AzORKLvGDhyYVOyyj9JHETz6ym9we6paA/sqKuRV8YrH+5ntMkr/FIDC99tL2iQ5jfNPDbseMGYiuZpwweoK4ppd3YD7iQLIVE8VWcx1CBRnRAdFAyK0N4iOdXx4jnrmpbuHGqBIFswja6XqgcoIPUxwp8MGeAOyV62wiTOT3bJ4qSIMcXFn2pPT1Qn0Bvc8iBPFoAtoxnc3TYXk8zY6pQzGfjncUSnC0x2q36Uu+4Wideg8bU8JMtRbsH8fy+qXoQN+N21lW8cwJqjq9shEtn9d4laESXEufFKk9eRi4V/OBhUdWRZucv8sMlb5t8fIQBq07b/VvDYnaTrS63RSp2Ao6y3uhtlZZj+YuTlhYOiGcZZ7io1rO/Te8ISzrPnlmQqSpSHuXLunj1GmUU="
   apt:
     packages:
       - g++-9
+      - cmake
+      - openjdk-17-jre
 
 env:
-  - CXX=g++-9 BUILD_WRAPPER_OUT_DIR=build_wrapper_output_folder
+  - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 PATH=$JAVA_HOME/bin:$PATH CXX=g++-9 BUILD_WRAPPER_OUT_DIR=build_wrapper_output_directory
 
 script:
   # Prepare the build system
   - autoreconf --install
   - ./configure
-  - NUMBER_OF_PROCESSORS=$(nproc --all)
   # Wraps the compilation with the Build Wrapper to generate configuration (used
-  # later by the SonarQube Scanner) into the "build_wrapper_output_folder" folder
+  # later by the SonarQube Scanner) into the "build_wrapper_output_directory" folder
   - build-wrapper-linux-x86-64 --out-dir "$BUILD_WRAPPER_OUT_DIR" make clean all
   # Execute the tests to generate the coverage statistics
   - ./src/test1/coverage_test1
@@ -38,9 +37,7 @@ script:
   - cd ..
   # And finally run the SonarQube analysis - read the "sonar-project.properties"
   # file to see the specific configuration
-  - >
-    sonar-scanner --define sonar.cfamily.compile-commands="$BUILD_WRAPPER_OUT_DIR/compile_commands.json" \
-                  --define sonar.cfamily.gcov.reportsPath="coverage-dir"
+  - sonar-scanner --define sonar.cfamily.gcov.reportsPath="coverage-dir"
 
 cache:
   directories:
