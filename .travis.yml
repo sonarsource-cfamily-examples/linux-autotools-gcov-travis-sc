@@ -13,10 +13,10 @@ addons:
     packages:
       - g++-9
       - cmake
-      - openjdk-17-jre
+      - openjdk-21-jre
 
 env:
-  - JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 PATH=$JAVA_HOME/bin:$PATH CXX=g++-9 BUILD_WRAPPER_OUT_DIR=build_wrapper_output_directory
+  - JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 PATH=$JAVA_HOME/bin:$PATH CXX=g++-9 BUILD_WRAPPER_OUT_DIR=build_wrapper_output_directory
 
 script:
   # Prepare the build system
